@@ -23,7 +23,10 @@ export default class Login extends Vue {
 </script>
 
 <style lang="less" scoped>
+
 .login-container {
+  height: 100%;
+  background-color: #fff;
   display: flex;
   justify-content: center;
   align-items: center;

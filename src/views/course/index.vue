@@ -31,6 +31,7 @@ export default class Course extends Vue {
 <style scoped lang="less">
 .course-container{
   margin-top: 46px;
+  margin-bottom: 25px;
 }
 
 </style>

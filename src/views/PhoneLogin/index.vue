@@ -100,7 +100,10 @@ export default class PhoneLogin extends Vue {
 
 <style lang="less">
 .phone-login-container {
+  height: 100%;
+  background-color: #fff;
   padding: 0px 34px;
+  overflow: hidden;
   .phone-validate {
     margin-top: 50px;
     color: #393939;
