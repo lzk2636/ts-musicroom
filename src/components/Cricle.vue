@@ -6,13 +6,14 @@ import { Vue, Component, Prop } from "vue-property-decorator";
 // import { VanComponent } from 'vant/types/component';
 @Component
 export default class Circle extends Vue {
-  @Prop({ type: Number, default: 50 }) width?: number;
-  @Prop({ type: Number, default: 50 }) height?: number;
-  @Prop({ type: String, default: "#f8f8f8" }) foreBackground?: string;
-  @Prop({ type: String, default: "#ff0000" }) Criclebackground?: string;
+  @Prop({ type: Number, default: 50 }) width!: number;
+
+  @Prop({ type: Number, default: 50 }) height!: number;
+  @Prop({ type: String, default: "#f8f8f8" }) foreBackground!: string;
+  @Prop({ type: String, default: "#ff0000" }) Criclebackground!: string;
   @Prop({ type: Number }) canvId?: number;
-  @Prop({ type: Number, default: "5" }) lineWidth?: number;
-  @Prop({ type: Number, default: "5" }) studyProgress?: number;
+  @Prop({ type: Number, default: "5" }) lineWidth!: number;
+  @Prop({ type: Number, default: "5" }) studyProgress!: number;
   x=this.width
   y=this.height
   progress=this.studyProgress
@@ -22,9 +23,8 @@ export default class Circle extends Vue {
 
  
   mounted() {
-    // console.log(document.getElementById("mysid"+this.canvId).getContext('2d'))
-    const ctx =  this.$refs.canid.getContext("2d");
-    // console.log(x)
+    
+    const ctx=this.$refs.canid.getContext("2d")
     ctx.strokeStyle = this.foreBackground;
     ctx.lineWidth = this.lineWidth;
     ctx.lineCap="round";
