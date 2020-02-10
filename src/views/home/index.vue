@@ -7,7 +7,7 @@
     </van-search>
     <van-swipe class="my-swipe" :autoplay="3000" indicator-color="white">
       <van-swipe-item v-for="(item, index) in imageUrl" :key="index">
-        <img :src="item.img_url" />
+        <img :src="item.img_url" @click="toCourseDetail(item.id)" />
       </van-swipe-item>
     </van-swipe>
     <!-- 推荐课程 -->
@@ -18,7 +18,9 @@
       </div>
       <div class="course-container">
         <div class="course-item" v-for="(item, index) in couserList" :key="index">
-          <img :src="item.icon" />
+          
+            <img :src="item.icon"  @click="toCourseDetail(item.relation_id)" />
+       
         </div>
       </div>
     </div>
@@ -26,12 +28,12 @@
     <div>
       <div class="tips">
         <div class="tip">热门视频</div>
-        <img src="../../assets/images/arrow@2x.png" />
+        <img src="../../assets/images/arrow@2x.png" @click="toCourseDetail(3)"/>
       </div>
       <div class="hot-video">
         <div class="video-item">
-          <router-link to="/" v-for="(item, index) in videoList" :key="index">
-          <img :src="item.cover_photo_url" alt="">
+          <router-link :to="'/course-detail/'+item.course_id" v-for="(item, index) in videoList" :key="index">
+            <img :src="item.cover_photo_url" alt />
             <div class="title">{{item.name}}</div>
             <div class="subtitle">{{item.view_count}}已经观看</div>
           </router-link>
@@ -63,9 +65,13 @@ export default class Home extends Vue {
     this.currentCourse();
     this.currentVodie();
   }
+  // 页面详情
+  toCourseDetail(id: number) {
+    this.$router.push("/course-detail/" + id);
+  }
   // 页面跳转
-  couseMore(){
-    this.$router.push('/course')
+  couseMore() {
+    this.$router.push("/course");
   }
 
   // 初始化数据
@@ -98,9 +104,9 @@ export default class Home extends Vue {
 </script>
 
 <style lang="less" scoped>
-.router-link {
-  display: inline-block;
-}
+// .router-link {
+//   display: inline-block;
+// }
 .home-container {
   height: 100%;
   .van-icon {
@@ -109,6 +115,8 @@ export default class Home extends Vue {
     }
   }
   .my-swipe .van-swipe-item {
+    width: 355px;
+    height: 171px;
     color: #fff;
     font-size: 20px;
     // line-height: 150px;
@@ -116,7 +124,7 @@ export default class Home extends Vue {
     // background-color: #39a9ed;
     img {
       width: 355px;
-      height: 171px;
+      height: 100%;
     }
   }
   .tips {
@@ -148,7 +156,7 @@ export default class Home extends Vue {
       display: inline-block;
       margin-right: 16px;
       // background: #000;
-      &:first-child{
+      &:first-child {
         margin-left: 10px;
       }
       img {

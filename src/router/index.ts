@@ -32,8 +32,13 @@ const routes = [
   },
   {
     path:"/PhoneLogin",
-    component:()=>import('@/views/PhoneLogin/index.vue')
+    component:()=>import('@/views/PhoneLogin')
   },
+  {
+    path:"/course-detail/:id",
+    component:()=>import('@/views/course-detail')
+  },
+
 ]
 
 const router = new VueRouter({
