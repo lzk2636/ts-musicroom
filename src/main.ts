@@ -4,7 +4,8 @@ import router from './router'
 import store from './store'
 
 Vue.config.productionTip = false
-
+// console.log(process.env)
+import 'vant/lib/index.css';
 new Vue({
   router,
   store,
