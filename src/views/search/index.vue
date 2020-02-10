@@ -1,6 +1,6 @@
 <template>
   <div>
-    <van-nav-bar left-arrow @click-left="$router.back()" title="酷丁鱼课堂" />
+    <van-nav-bar left-arrow @click-left="$router.back()" title="酷丁鱼课堂" fixed/>
     <van-search
       v-model="value"
       @focus="focus"
@@ -74,5 +74,8 @@ export default class Searcher extends Vue {
 .empty .title {
   font-size: 14px;
   color: gray;
+}
+.van-search{
+  margin-top: 46px;
 }
 </style>
