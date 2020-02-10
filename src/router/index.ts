@@ -38,6 +38,10 @@ const routes = [
     path:"/course-detail/:id",
     component:()=>import('@/views/course-detail')
   },
+  {
+    path:"/search",
+    component:()=>import('@/views/search')
+  },
 
 ]
 

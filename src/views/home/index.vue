@@ -1,6 +1,6 @@
 <template>
   <div class="home-container">
-    <van-search shape="round" background="#ffffff" placeholder="请输入搜索关键词">
+    <van-search shape="round" background="#ffffff" placeholder="请输入搜索关键词" @click="$router.push('/search')">
       <template slot="left-icon">
         <van-icon name="search" />
       </template>
