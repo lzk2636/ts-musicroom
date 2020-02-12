@@ -21,7 +21,7 @@ import { Vue, Component, Prop } from "vue-property-decorator";
 export default class Star extends Vue {
   @Prop({ type: Number, required: true }) score!: number;
   myScore = 0;
-  mounted() {
+  created() {
     this.myScore = this.score;
   }
   star(index: number){
@@ -42,8 +42,8 @@ export default class Star extends Vue {
     // vertical-align:
 
     img {
-      width: 20px;
-      height: 20px;
+      width: 15px;
+      height: 15px;
     }
   }
   .star {

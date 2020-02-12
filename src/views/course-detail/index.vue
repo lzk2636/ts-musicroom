@@ -17,16 +17,80 @@
         <p>{{courseDetails.course.title}}</p>
         <p>￥{{courseDetails.course.price}}</p>
       </div>
-      <div class="introduce">
-        {{courseDetails.course.introduction}}
-      </div>
+      <div class="introduce">{{courseDetails.course.introduction}}</div>
       <div class="star">
-      <star :score="courseDetails.course.score"></star>
-      <p>{{courseDetails.course.study_count}}人已经学习</p>
+        <star :score="courseDetails.course.score"></star>
+        <p>{{courseDetails.course.study_count}}人已经学习</p>
       </div>
       <div class="study-share">
-        <img src="../../assets/images/start_study@2x.png">
+        <img src="../../assets/images/start_study@2x.png" @click="playings" />
         <div class="share-button"></div>
+      </div>
+    </div>
+    <!--用户介绍 -->
+    <div class="catalog">
+      <div class="head">
+        <p
+          v-for="(item, index) in courseName"
+          :key="index"
+          @click="toDetail(index)"
+          :class="{active:couserIndex===index}"
+        >{{item}}</p>
+      </div>
+      <!--课程列表-->
+      <div class="catelog-container" v-if="couserIndex==0">
+        <div v-if="courseDetails.videos">
+          <span v-for="(item,index) in courseDetails.videos" :key="index">{{index+1}}.{{item.name}}</span>
+        </div>
+        <div v-else>暂无这个课程学习</div>
+      </div>
+
+      <!--- 讲师介绍 -->
+      <div class="lecturer-container" v-if="couserIndex==1">
+        <div v-if="courseDetails.lecturer">
+          <div class="info">
+            <div class="name-follow">
+              <p>{{courseDetails.lecturer.name}}</p>
+              <p>{{courseDetails.lecturer.follow_count}}人关注</p>
+            </div>
+            <img :src="courseDetails.lecturer.avatar" />
+            <div
+              @click="followLecturer(courseDetails.lecturer)"
+              :class="[courseDetails.lecturer.is_follow==0? 'unfollow':'follow']"
+            >{{courseDetails.lecturer.is_follow==0? '关注':'已关注'}}</div>
+            <!-- <div class="follow">已关注</div> -->
+          </div>
+          <div class="introduce">
+            <p>{{courseDetails.lecturer.introduction}}</p>
+          </div>
+        </div>
+        <div v-else>讲师列表暂无数据</div>
+      </div>
+      <!-- 评论列表-->
+      <div class="comment-item" v-if="couserIndex==2">
+        <div v-if="courseDetails.comments.length>0">
+          <div v-for="(item,index) in courseDetails.comments" :key="index">
+            <div class="info">
+              <img :src="item.avatar" />
+              <div class="nickname-content">
+                <div class="nickname">
+                  <p>{{item.nickname}}</p>
+                  <star :score="item.score"></star>
+                </div>
+                <p>{{item.content}}</p>
+              </div>
+              <!-- <star class="star" :score="5"></star> -->
+              <div class="time">{{item.comment_time}}</div>
+            </div>
+            <div class="star">
+              <img
+                @click="like(item)"
+                :src="item.is_like == 1 ? require('../../assets/images/like_normal@2x.png') : require('../../assets/images/like_highlight@2x.png')"
+              />
+            </div>
+          </div>
+        </div>
+        <div v-else>暂无评论</div>
       </div>
     </div>
   </div>
@@ -35,20 +99,29 @@
 <script lang="ts">
 import { Vue, Component } from "vue-property-decorator";
 import http from "@/utils/http";
-import star from '@/components/star.vue'
+import star from "@/components/star.vue";
 @Component({
-  components:{
+  components: {
     star
   }
 })
 export default class CourseDetail extends Vue {
-  id  = "";
-  courseDetails = null;
+  id = "";
+  // eslint-disable-next-line @typescript-eslint/camelcase
+  courseDetails = "";
   isPlay = false;
-
+  courseName = ["目录", "讲师介绍", "评价"];
+  couserIndex = 0;
+playings(){
+  this.$router.push(`/play/${this.id}`)
+}
+  toDetail(index: number) {
+    console.log(index);
+    this.couserIndex = index;
+  }
   playing() {
     this.isPlay = true;
-    console.log(this)
+    console.log(this);
   }
 
   created() {
@@ -59,11 +132,52 @@ export default class CourseDetail extends Vue {
   async currentData() {
     // console.log();
     const res = await http({
-      url: "course/play/" + this.id
+      url: "course/" + this.id
     });
     if (res.data.status === 0) {
       this.courseDetails = res.data.message;
     }
+  }
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  async followLecturer(lecturer: any) {
+    // console.log(this.courseDetails.lecturer["is_follow"]=0)
+    if (lecturer.is_follow === 0) {
+      const res1 = await http.post("lecturer/follow", {
+        ["lecturer_id"]: lecturer["id"]
+      });
+      if (res1.data.status === 0) {
+        this.$toast("关注成功");
+        lecturer["is_follow"] = 1;
+      }
+    } else {
+      const res1 = await http.post("lecturer/unfollow", {
+        ["lecturer_id"]: lecturer["id"]
+      });
+      if (res1.data.status === 0) {
+        this.$toast("取消关注成功");
+        lecturer["is_follow"] = 0;
+      }
+    }
+  }
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  async like(item: any) {
+    switch (item["is_like"]) {
+      case 1:
+        item["is_like"] = 2;
+        break;
+
+      default:
+        item["is_like"] = 1;
+        break;
+    }
+     await http({
+      url: "comment/like",
+      method: "POST",
+      data: {
+        ["comment_id"]: item.id,
+        ["is_like"]: item["is_like"]
+      }
+    });
   }
 }
 </script>
@@ -174,25 +288,25 @@ export default class CourseDetail extends Vue {
     }
   }
   .catalog {
-    margin-top: 520rpx;
+    margin-top: 260px;
     // position: absolute;
     z-index: 5;
-    width: 750rpx;
+    width: 375px;
     // height: 582rpx;
     background-color: #ffffff;
     .head {
-      height: 120rpx;
+      height: 60px;
       background-color: #ffffff;
       display: flex;
       align-items: center;
       justify-content: space-between;
       border-bottom: 1px solid #f5f5f5;
-      text {
+      p {
         text-align: center;
         color: #a8a8a8;
         font-size: 14px;
-        height: 120rpx;
-        line-height: 120rpx;
+        height: 60px;
+        line-height: 60px;
         flex: 1;
         position: relative;
       }
@@ -202,78 +316,79 @@ export default class CourseDetail extends Vue {
         &::after {
           content: "";
           position: absolute;
-          left: 88rpx;
+          left: 44px;
           bottom: 0px;
-          width: 74rpx;
+          width: 37px;
           height: 3px;
           background-color: #ff8e43;
         }
       }
     }
     .catelog-container {
-      padding: 30rpx;
-      height: 582rpx;
-      text {
+      padding: 15px;
+      height: 291px;
+      span {
         background-color: #ffffff;
         color: #636363;
-        font-size: 30rpx;
-        height: 80rpx;
-        line-height: 80rpx;
+        font-size: 15px;
+        height: 40px;
+        line-height: 40px;
         display: block;
       }
     }
     .lecturer-container {
-      padding: 30rpx;
+      padding: 15px;
       .info {
-        height: 200rpx;
+        height: 100px;
         display: flex;
         align-items: center;
         .name-follow {
-          margin-left: 30rpx;
+          margin-left: 15px;
           display: flex;
           flex-direction: column;
           flex: 1;
-          text:nth-child(1) {
-            font-size: 34rpx;
+          p:nth-child(1) {
+            font-size: 17px;
             color: #333333;
           }
-          text:nth-child(2) {
-            font-size: 28rpx;
-            margin-top: 15rpx;
+          p:nth-child(2) {
+            font-size: 14px;
+            margin-top: 8px;
             color: #a8a8a8;
           }
         }
-        image {
-          margin-left: 12rpx;
-          width: 120rpx;
-          height: 120rpx;
+        img {
+          margin-left: 6px;
+          width: 60px;
+          height: 60px;
+          margin-right: 5px;
         }
         .unfollow {
-          width: 136rpx;
-          height: 52rpx;
-          line-height: 52rpx;
+          width: 68px;
+          height: 26px;
+          line-height: 26px;
           text-align: center;
           border: 1px solid #a8a8a8;
-          border-radius: 26rpx;
+          border-radius: 13px;
           color: #a8a8a8;
-          font-size: 28rpx;
+          font-size: 14px;
         }
         .follow {
-          width: 136rpx;
-          height: 52rpx;
-          line-height: 52rpx;
+          width: 68px;
+          height: 26px;
+          line-height: 26px;
           text-align: center;
           border: 1px solid #a8a8a8;
-          border-radius: 26rpx;
+          border-radius: 13px;
           color: #fff;
           background-color: #a8a8a8;
-          font-size: 28rpx;
+          font-size: 14px;
         }
       }
       .introduce {
         background-color: #ffffff;
-        text {
-          margin-left: 12rpx;
+        p {
+          margin-left: 6px;
           font-size: 12px;
           font-family: PingFang SC;
           font-weight: 400;
@@ -285,35 +400,36 @@ export default class CourseDetail extends Vue {
     }
     .comment-item {
       background-color: #ffffff;
-      padding: 30rpx;
-      height: 180rpx;
+      padding: 15px;
+      // height: 90px;
       border-bottom: 2px solid #f1f1f1;
       .info {
-        height: 120rpx;
+        position: relative;
+        // height: 60px;
         display: flex;
         align-items: center;
-        image {
-          margin-left: 6rpx;
-          width: 96rpx;
-          height: 96rpx;
+        img {
+          margin-left: 3px;
+          width: 48px;
+          height: 48px;
           border-radius: 50%;
         }
         .nickname-content {
           flex: 1;
-          margin-left: 30rpx;
+          margin-left: 15px;
           .nickname {
             color: #333333;
-            font-size: 30rpx;
+            font-size: 15px;
             font-weight: bold;
             align-items: center;
             display: flex;
-            view {
+            p {
               height: 100%;
               display: inline-block;
             }
           }
-          view:nth-child(2) {
-            margin-top: 16rpx;
+          p:nth-child(2) {
+            margin-top: 8px;
             color: #a8a8a8;
             font-size: 12px;
           }
@@ -323,17 +439,18 @@ export default class CourseDetail extends Vue {
           font-size: 11px;
         }
       }
-    }
-    .star {
-      image {
-        margin-top: 30rpx;
-        width: 44rpx;
-        height: 44rpx;
-        float: right;
-        margin-right: 20rpx;
-      }
-      image:nth-child(0) {
-        margin-right: 20rpx;
+      .star {
+        height: 30px;
+        img {
+          margin-top: 15px;
+          width: 22px;
+          height: 22px;
+          float: right;
+          margin-right: 10px;
+        }
+        img:nth-child(0) {
+          margin-right: 10px;
+        }
       }
     }
   }
