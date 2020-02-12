@@ -24,7 +24,7 @@ export default class Circle extends Vue {
  
   mounted() {
     
-    const ctx=this.$refs.canid.getContext("2d")
+    const ctx=(this.$refs.canid as any).getContext("2d")
     ctx.strokeStyle = this.foreBackground;
     ctx.lineWidth = this.lineWidth;
     ctx.lineCap="round";

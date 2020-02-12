@@ -1,18 +1,341 @@
 <template>
-  <div>
-    {{this.$route.path}}
-    asas
+  <div class="course-detail-container" v-if="courseDetails">
+    <van-nav-bar left-arrow @click-left="$router.back()"></van-nav-bar>
+    <div class="cover_image" v-if="!isPlay">
+      <img :src="courseDetails.course.cover_image_url" />
+      <div class="play">
+        <img src="../../assets/images/play@2x.png" @click="playing" />
+        <p>课程播放</p>
+      </div>
+    </div>
+    <div class="course_video" v-else>
+      <video controls :src="courseDetails.course.course_video_url" autoplay></video>
+    </div>
+    <!-- 介绍-->
+    <div class="introduction">
+      <div class="title-price">
+        <p>{{courseDetails.course.title}}</p>
+        <p>￥{{courseDetails.course.price}}</p>
+      </div>
+      <div class="introduce">
+        {{courseDetails.course.introduction}}
+      </div>
+      <div class="star">
+      <star :score="courseDetails.course.score"></star>
+      <p>{{courseDetails.course.study_count}}人已经学习</p>
+      </div>
+      <div class="study-share">
+        <img src="../../assets/images/start_study@2x.png">
+        <div class="share-button"></div>
+      </div>
+    </div>
   </div>
 </template>
 
 <script lang="ts">
-import { Component, Vue } from "vue-property-decorator";
-@Component
+import { Vue, Component } from "vue-property-decorator";
+import http from "@/utils/http";
+import star from '@/components/star.vue'
+@Component({
+  components:{
+    star
+  }
+})
 export default class CourseDetail extends Vue {
-  
+  id  = "";
+  courseDetails = null;
+  isPlay = false;
+
+  playing() {
+    this.isPlay = true;
+    console.log(this)
+  }
+
+  created() {
+    this.id = this.$route.params.id;
+    // console.log(this.id)
+    this.currentData();
+  }
+  async currentData() {
+    // console.log();
+    const res = await http({
+      url: "course/play/" + this.id
+    });
+    if (res.data.status === 0) {
+      this.courseDetails = res.data.message;
+    }
+  }
 }
 </script>
 
-<style>
-
+<style lang="less" scoped>
+.course-detail-container {
+  background-color: #efefef;
+  position: relative;
+  .cover_image {
+    width: 375px;
+    height: 217px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    img {
+      width: 375px;
+      height: 217px;
+    }
+    position: relative;
+    .play {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      position: absolute;
+      img {
+        width: 82px;
+        height: 82px;
+      }
+      p {
+        margin-top: 5px;
+        color: #e9e9e9;
+        font-size: 15px;
+      }
+    }
+  }
+  .course_video {
+    width: 375px;
+    height: 217px;
+    video {
+      width: 375px;
+      height: 217px;
+    }
+  }
+  .introduction {
+    z-index: 3;
+    position: absolute;
+    margin-top: 0px;
+    border-radius: 16px 16px 0px 0px;
+    left: 0;
+    right: 0;
+    height: 226px;
+    background-color: #ffffff;
+    padding: 10px 15px;
+    .title-price {
+      margin-top: 5px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      p:nth-child(1) {
+        font-size: 24px;
+        color: #343434;
+        font-weight: Bold;
+      }
+      p:nth-child(2) {
+        font-size: 22px;
+        color: #ee3939;
+      }
+    }
+    .introduce {
+      color: #818181;
+      font-size: 12px;
+      // margin-top: 50px;
+    }
+    .star {
+      display: flex;
+      margin-top: 20rpx;
+      p {
+        height: 50rpx;
+        line-height: 50rpx;
+        margin-left: 20rpx;
+        font-size: 12px;
+        color: #fe8e38;
+      }
+    }
+    .study-share {
+      margin-top: 21px;
+      margin-bottom: 26px;
+      img:nth-child(1) {
+        width: 284px;
+        height: 46px;
+      }
+      .share-button {
+        border: none;
+        width: 46px;
+        height: 46px;
+        background-color: #fff;
+        border-radius: 5px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        float: right;
+        background-image: url(../../assets/images/share@2x.png);
+        background-repeat: no-repeat;
+        background-size: 17px 17px;
+        background-position: 15px 15px;
+      }
+    }
+  }
+  .catalog {
+    margin-top: 520rpx;
+    // position: absolute;
+    z-index: 5;
+    width: 750rpx;
+    // height: 582rpx;
+    background-color: #ffffff;
+    .head {
+      height: 120rpx;
+      background-color: #ffffff;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid #f5f5f5;
+      text {
+        text-align: center;
+        color: #a8a8a8;
+        font-size: 14px;
+        height: 120rpx;
+        line-height: 120rpx;
+        flex: 1;
+        position: relative;
+      }
+      .active {
+        color: #333333;
+        font-weight: bold;
+        &::after {
+          content: "";
+          position: absolute;
+          left: 88rpx;
+          bottom: 0px;
+          width: 74rpx;
+          height: 3px;
+          background-color: #ff8e43;
+        }
+      }
+    }
+    .catelog-container {
+      padding: 30rpx;
+      height: 582rpx;
+      text {
+        background-color: #ffffff;
+        color: #636363;
+        font-size: 30rpx;
+        height: 80rpx;
+        line-height: 80rpx;
+        display: block;
+      }
+    }
+    .lecturer-container {
+      padding: 30rpx;
+      .info {
+        height: 200rpx;
+        display: flex;
+        align-items: center;
+        .name-follow {
+          margin-left: 30rpx;
+          display: flex;
+          flex-direction: column;
+          flex: 1;
+          text:nth-child(1) {
+            font-size: 34rpx;
+            color: #333333;
+          }
+          text:nth-child(2) {
+            font-size: 28rpx;
+            margin-top: 15rpx;
+            color: #a8a8a8;
+          }
+        }
+        image {
+          margin-left: 12rpx;
+          width: 120rpx;
+          height: 120rpx;
+        }
+        .unfollow {
+          width: 136rpx;
+          height: 52rpx;
+          line-height: 52rpx;
+          text-align: center;
+          border: 1px solid #a8a8a8;
+          border-radius: 26rpx;
+          color: #a8a8a8;
+          font-size: 28rpx;
+        }
+        .follow {
+          width: 136rpx;
+          height: 52rpx;
+          line-height: 52rpx;
+          text-align: center;
+          border: 1px solid #a8a8a8;
+          border-radius: 26rpx;
+          color: #fff;
+          background-color: #a8a8a8;
+          font-size: 28rpx;
+        }
+      }
+      .introduce {
+        background-color: #ffffff;
+        text {
+          margin-left: 12rpx;
+          font-size: 12px;
+          font-family: PingFang SC;
+          font-weight: 400;
+          line-height: 20px;
+          color: rgba(168, 168, 168, 1);
+          opacity: 1;
+        }
+      }
+    }
+    .comment-item {
+      background-color: #ffffff;
+      padding: 30rpx;
+      height: 180rpx;
+      border-bottom: 2px solid #f1f1f1;
+      .info {
+        height: 120rpx;
+        display: flex;
+        align-items: center;
+        image {
+          margin-left: 6rpx;
+          width: 96rpx;
+          height: 96rpx;
+          border-radius: 50%;
+        }
+        .nickname-content {
+          flex: 1;
+          margin-left: 30rpx;
+          .nickname {
+            color: #333333;
+            font-size: 30rpx;
+            font-weight: bold;
+            align-items: center;
+            display: flex;
+            view {
+              height: 100%;
+              display: inline-block;
+            }
+          }
+          view:nth-child(2) {
+            margin-top: 16rpx;
+            color: #a8a8a8;
+            font-size: 12px;
+          }
+        }
+        .time {
+          color: #a8a8a8;
+          font-size: 11px;
+        }
+      }
+    }
+    .star {
+      image {
+        margin-top: 30rpx;
+        width: 44rpx;
+        height: 44rpx;
+        float: right;
+        margin-right: 20rpx;
+      }
+      image:nth-child(0) {
+        margin-right: 20rpx;
+      }
+    }
+  }
+}
 </style>
