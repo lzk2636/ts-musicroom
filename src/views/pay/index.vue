@@ -9,6 +9,7 @@ import {Vue, Component} from "vue-property-decorator"
 // import { VanComponent } from 'vant/types/component';
 @Component
 export default class Pay extends Vue{
+  myvariable=55;
   created(){
     console.log(this.$route)
   }

@@ -99,27 +99,24 @@ export default class Play extends Vue {
     this.currentData();
   }
   get level() {
+    let level=""
     switch (this.courseDetails.course.level) {
-      case 1: {
-        return "初级";
-        // eslint-disable-next-line no-unreachable
+      case 1:
+        level= "初级";
         break;
-      }
       case 2: {
-        return "中级";
-        // eslint-disable-next-line no-unreachable
+        level= "中级";
         break;
       }
       case 3: {
-        return "高级";
-        // eslint-disable-next-line no-unreachable
+        level= "高级";
         break;
       }
       default:
-        return "无等级";
-        // eslint-disable-next-line no-unreachable
+        level= "无等级";
         break;
     }
+    return level;
   }
   async currentData() {
     const res = await http({
