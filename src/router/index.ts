@@ -45,6 +45,11 @@ const routes = [
   {
     path:"/play/:id",
     component:()=>import('@/views/play')
+  },
+  {
+    path:"/pay",
+    name:"pay",
+    component:()=>import('@/views/pay')
   }
 
 ]

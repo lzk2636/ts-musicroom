@@ -68,7 +68,7 @@
       </div>
       <!-- 评论列表-->
       <div class="comment-item" v-if="couserIndex==2">
-        <div v-if="courseDetails.comments.length>0">
+        <div v-if="courseDetails.comments!==null && courseDetails.comments.length>0 ">
           <div v-for="(item,index) in courseDetails.comments" :key="index">
             <div class="info">
               <img :src="item.avatar" />
@@ -108,7 +108,7 @@ import star from "@/components/star.vue";
 export default class CourseDetail extends Vue {
   id = "";
   // eslint-disable-next-line @typescript-eslint/camelcase
-  courseDetails = "";
+  courseDetails = null;
   isPlay = false;
   courseName = ["目录", "讲师介绍", "评价"];
   couserIndex = 0;
@@ -140,7 +140,6 @@ playings(){
   }
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   async followLecturer(lecturer: any) {
-    // console.log(this.courseDetails.lecturer["is_follow"]=0)
     if (lecturer.is_follow === 0) {
       const res1 = await http.post("lecturer/follow", {
         ["lecturer_id"]: lecturer["id"]

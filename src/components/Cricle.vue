@@ -24,6 +24,7 @@ export default class Circle extends Vue {
  
   mounted() {
     
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const ctx=(this.$refs.canid as any).getContext("2d")
     ctx.strokeStyle = this.foreBackground;
     ctx.lineWidth = this.lineWidth;
