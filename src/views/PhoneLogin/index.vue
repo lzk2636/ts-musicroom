@@ -26,7 +26,7 @@ export default class PhoneLogin extends Vue {
   tips = "验证码";
   vcode = "";
   count = 10;
-  phone = "";
+  phone = "17704051019";
   timer = -1;
   phoneLogin() {
     // 1111;

@@ -47,7 +47,7 @@ const routes = [
     component:()=>import('@/views/play')
   },
   {
-    path:"/pay",
+    path:"/pay/:id/:price/:title",
     name:"pay",
     component:()=>import('@/views/pay')
   }
