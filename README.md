@@ -31,11 +31,11 @@ See [Configuration Reference](https://cli.vuejs.org/config/).
 
 ![1581662390672](./src/assets/imageView/1581662390672.png)
 
-+ ![1581662426375](.\src\assets\imageView\1581662426375.png)
++ ![1581662426375](./src/assets/imageView/1581662426375.png)
 
-+ ![1581662450136](./src/assets/imageView\1581662450136.png)
++ ![1581662450136](./src/assets/imageView/1581662450136.png)
 + 
 
-![1581662477126](./src/assets\imageView\1581662477126.png)
+![1581662477126](./src/assets/imageView/1581662477126.png)
 
  
