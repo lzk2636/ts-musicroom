@@ -141,6 +141,7 @@ export default class Play extends Vue {
 		})
 		if (res.data.status === 0) {
 			this.courseDetails = res.data.message
+			if(!this.courseDetails.videos) return
 			this.playUrl = this.courseDetails.videos[0].video_url
 			this.imgUrl = this.courseDetails.videos[0].cover_photo_url
 			// this.mylevel = this.courseDetails.course.level;
