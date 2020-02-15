@@ -121,7 +121,7 @@ playings(){
   }
   playing() {
     this.isPlay = true;
-    console.log(this);
+    // console.log(this);
   }
 
   created() {
@@ -178,6 +178,10 @@ playings(){
       }
     });
   }
+  destroyed(){
+		console.log('--destored---')
+		// this.$refs.myVideo && (this.$refs.myVideo as any).pause()
+	}
 }
 </script>
 

@@ -3,7 +3,7 @@
 		<van-nav-bar left-arrow @click-left="$router.back()"></van-nav-bar>
 		<div class="cover_image">
 			<img :src="imgUrl" alt v-if="playUrl==null" />
-			<video :src="playUrl" controls v-else ref="myVideo"></video>
+			<video :src="playUrl" controls v-else ref="myVideo" @play="playerVideo"></video>
 		</div>
 		<div class="introduction">
 			<div class="title-and-info">
@@ -54,11 +54,17 @@ export default class Play extends Vue {
 	imgUrl = ''
 	activeIndex = 0
 	show = false
+	isChecked=false
+	playerVideo(){
+		// console.log(555)
+		!this.isChecked && this.selectStudy(0)
+	}
 	async selectStudy(index) {
 		// eslint-disable-next-line @typescript-eslint/no-explicit-any
 		(this.$refs.myVideo as any).pause()
 		// 校正
 		const isCheck = await this.payFor()
+		// console.log(isCheck,'-----------isCheck')
 		if (!isCheck) {
 			this.$dialog
 				.confirm({
@@ -102,8 +108,10 @@ export default class Play extends Vue {
 		// console.log(res);
 		if (res.data.status === 0) {
 			if (res.data.message.pay_status === 0) {
+				// console.log(res)
 				return Promise.resolve(false)
 			} else {
+				this.isChecked=true
 				return Promise.resolve(true)
 			}
 		} else {
@@ -178,6 +186,7 @@ export default class Play extends Vue {
 			}
 		}
 	}
+	
 }
 </script>
 
