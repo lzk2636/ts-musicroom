@@ -54,8 +54,8 @@ export default class Play extends Vue {
 	imgUrl = ''
 	activeIndex = 0
 	show = false
-	isChecked=false
-	playerVideo(){
+	isChecked = false
+	playerVideo() {
 		// console.log(555)
 		!this.isChecked && this.selectStudy(0)
 	}
@@ -78,11 +78,11 @@ export default class Play extends Vue {
 						name: 'pay',
 						params: {
 							// articleId: {
-								id: this.id,
-								imagesUrl: this.courseDetails.course
-									.cover_image_url,
-								price: this.courseDetails.course.price,
-								title: this.courseDetails.course.title
+							id: this.id,
+							imagesUrl: this.courseDetails.course
+								.cover_image_url,
+							price: this.courseDetails.course.price,
+							title: this.courseDetails.course.title
 							// }
 						}
 					})
@@ -111,7 +111,7 @@ export default class Play extends Vue {
 				// console.log(res)
 				return Promise.resolve(false)
 			} else {
-				this.isChecked=true
+				this.isChecked = true
 				return Promise.resolve(true)
 			}
 		} else {
@@ -149,7 +149,7 @@ export default class Play extends Vue {
 		})
 		if (res.data.status === 0) {
 			this.courseDetails = res.data.message
-			if(!this.courseDetails.videos) return
+			if (!this.courseDetails.videos) return
 			this.playUrl = this.courseDetails.videos[0].video_url
 			this.imgUrl = this.courseDetails.videos[0].cover_photo_url
 			// this.mylevel = this.courseDetails.course.level;
@@ -179,6 +179,9 @@ export default class Play extends Vue {
 		// console.log(res)
 		if (res.data.status === 0) {
 			if (!res.data.complete) {
+				this.$dialog.alert({
+					message: '你还没有学习完'
+				})
 				return
 			} else {
 				// console.log(555)
@@ -186,7 +189,6 @@ export default class Play extends Vue {
 			}
 		}
 	}
-	
 }
 </script>
 

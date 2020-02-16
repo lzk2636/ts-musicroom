@@ -7,8 +7,8 @@
 		show-cancel-button
 		@confirm="confirm"
 	>
-		<textarea cols="10" rows="3" v-model="inputValue"></textarea>
-		<Star :isChange="true" @Comment="Comments" />
+			<div class="score"><span>内容:</span><textarea cols="10" rows="3" v-model="inputValue"></textarea></div>
+		<div class="score"><span>评分:</span><Star :isChange="true" @Comment="Comments" /></div>
 	</van-dialog>
 </template>
 <script lang="ts">
@@ -54,5 +54,13 @@ textarea {
 	width: 319px;
 	height: 59px;
 	border: none;
+}
+.score{
+	display: flex;
+	span{
+		display: inline-block;
+		width: 68px;
+    margin-right: 5px;
+	}
 }
 </style>
